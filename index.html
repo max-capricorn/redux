@@ -1,0 +1,118 @@
+<!--
+ * @Author: sheng.wang
+ * @Date: 2021-04-28 17:27:21
+ * @LastEditTime: 2021-05-07 11:39:52
+ * @LastEditors: sheng.wang
+ * @Description: 
+ * @FilePath: /1/index.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible"
+        content="IE=edge">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script>
+
+</script>
+
+<body>
+  <script type="module">
+    import { createStore, combineReducers, applyMiddleware, bindActionCreators } from './redux/index.js';
+    import counter from './reducers/counter.js'
+    import info from './reducers/info.js'
+    import logger from './middlewares/loggerMiddleware.js'
+    import time from './middlewares/timeMiddleware.js'
+    import { setCounter } from './actions/counter.js'
+    import { setName } from './actions/info.js'
+
+    const demoState = {
+      counter: {
+        count: 0
+      },
+      info: {
+        name: 'capricorn',
+        description: '摩羯座'
+      }
+    }
+    const reducer = combineReducers({
+      counter,
+      info
+    })
+    const rewriteCreateStoreFunc = applyMiddleware(
+      logger,
+      time
+    )
+
+    const store = createStore(reducer, demoState, rewriteCreateStoreFunc)
+
+    const actions = bindActionCreators({
+      setName,
+      setCounter
+    }, store.dispatch)
+
+    actions.setCounter()
+    actions.setCounter()
+
+    // const next = store.dispatch
+    // const loggerMiddleware = logger(store)
+    // const timeMiddleware = time(store)
+    // store.dispatch = timeMiddleware(loggerMiddleware(next))
+    // store.subscribe(() => {
+    //   const state = store.getState()
+    //   console.log('state: ', state);
+    //   console.log(`${state.counter.count} ---- ${state.info.name}`)
+    // })
+
+
+    // // store.subscribe(() => {
+    // //   const state = store.getState()
+    // //   console.log(`**** ${state.user.name} **** ${state.user.description}`)
+    // // })
+
+    // store.dispatch({
+    //   type: 'INCREMENT'
+    // })
+    // store.dispatch({
+    //   type: 'SET_NAME',
+    //   name: '那就叫月初吧'
+    // })
+    // store.dispatch({
+    //   type: 'SET_NAME',
+    //   name: '那就叫憨憨吧'
+    // })
+    // store.dispatch({
+    //   type: 'DECREMENT'
+    // })
+    // store.dispatch({
+    //   type: 'INCREMENT'
+    // })
+    // store.dispatch({
+    //   type: 'INCREMENT'
+    // })
+    // store.changeState({
+    //   ...store.getState(),
+    //   user: {
+    //     name: 'ws',
+    //     description: '我是摩羯座'
+    //   }
+    // })
+
+    // store.changeState({
+    //   ...store.getState(),
+    //   counter: 999
+    //   // user: {
+    //   //   name: 'xxxxws',
+    //   //   description: 'xxxx我是摩羯座'
+    //   // }
+    // })
+    // console.log(createStore)
+  </script>
+</body>
+
+</html>
